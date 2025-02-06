@@ -5,14 +5,22 @@ GREEN="\e[32m"
 RED="\e[31m"
 NC="\e[0m"
 
-# Install necessary packages
-opkg update && opkg install sshpass whiptail bash
+# Remove Dropbear and install OpenSSH
+opkg update
+opkg remove dropbear
+opkg install openssh-server openssh-client sshpass whiptail bash screen
 
 # Prompt for SSH credentials
 HOST=$(whiptail --inputbox "Enter SSH Host:" 8 40 --title "PeDitX OS SshPlus on passwall" 3>&1 1>&2 2>&3)
 USER=$(whiptail --inputbox "Enter SSH Username:" 8 40 --title "PeDitX OS SshPlus on passwall" 3>&1 1>&2 2>&3)
 PASS=$(whiptail --passwordbox "Enter SSH Password:" 8 40 --title "PeDitX OS SshPlus on passwall" 3>&1 1>&2 2>&3)
-PORT=$(whiptail --inputbox "Enter SSH Port:" 8 40 "22" --title "PeDitX OS SshPlus on passwall" 3>&1 1>&2 2>&3)
+PORT=$(whiptail --inputbox "Enter SSH Port (e.g. 22 or 2222):" 8 40 "22" --title "PeDitX OS SshPlus on passwall" 3>&1 1>&2 2>&3)
+
+# Validate that PORT is a number
+if ! [[ "$PORT" =~ ^[0-9]+$ ]]; then
+    echo -e "${RED}Invalid port number!${NC}"
+    exit 1
+fi
 
 # Save SSH credentials
 CONFIG_FILE="/etc/sshplus.conf"
@@ -21,22 +29,19 @@ echo -e "HOST=${HOST}\nUSER=${USER}\nPASS=${PASS}\nPORT=${PORT}" > "$CONFIG_FILE
 # Create SSH service script
 cat > /etc/init.d/sshplus << EOF
 #!/bin/sh /etc/rc.common
-# Start and stop commands for sshplus
-
 START=99
 STOP=10
 
 start() {
     . "$CONFIG_FILE"
-    nohup sshpass -p "\$PASS" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -D 8089 -N -p "\$PORT" "\$USER@\$HOST" &
+    screen -dmS sshplus sshpass -p "\$PASS" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -D 8089 -N -p "\$PORT" "\$USER@\$HOST"
 }
 
 stop() {
-    # Check if sshpass is running before trying to kill it
-    if pgrep sshpass > /dev/null; then
-        killall sshpass
+    if screen -list | grep -q "sshplus"; then
+        screen -S sshplus -X quit
     else
-        echo -e "${RED}No sshpass process running to stop.${NC}"
+        echo -e "${RED}No active SSH proxy session found.${NC}"
     fi
 }
 EOF
@@ -98,7 +103,7 @@ edit_config() {
     HOST=$(whiptail --inputbox "Enter SSH Host:" 8 40 "$(grep HOST= "$CONFIG_FILE" | cut -d'=' -f2)" --title "PeDitX OS SshPlus on passwall" 3>&1 1>&2 2>&3)
     USER=$(whiptail --inputbox "Enter SSH Username:" 8 40 "$(grep USER= "$CONFIG_FILE" | cut -d'=' -f2)" --title "PeDitX OS SshPlus on passwall" 3>&1 1>&2 2>&3)
     PASS=$(whiptail --passwordbox "Enter SSH Password:" 8 40 --title "PeDitX OS SshPlus on passwall" 3>&1 1>&2 2>&3)
-    PORT=$(whiptail --inputbox "Enter SSH Port:" 8 40 "$(grep PORT= "$CONFIG_FILE" | cut -d'=' -f2)" --title "PeDitX OS SshPlus on passwall" 3>&1 1>&2 2>&3)
+    PORT=$(whiptail --inputbox "Enter SSH Port (e.g. 22 or 2222):" 8 40 "$(grep PORT= "$CONFIG_FILE" | cut -d'=' -f2)" --title "PeDitX OS SshPlus on passwall" 3>&1 1>&2 2>&3)
 
     echo -e "HOST=${HOST}\nUSER=${USER}\nPASS=${PASS}\nPORT=${PORT}" > "$CONFIG_FILE"
 }
