@@ -5,7 +5,7 @@ GREEN="\e[32m"
 RED="\e[31m"
 NC="\e[0m"
 
-# Remove Dropbear and install OpenSSH
+# Install necessary packages
 opkg update
 opkg remove dropbear
 opkg install openssh-server openssh-client sshpass whiptail bash screen
@@ -34,14 +34,21 @@ STOP=10
 
 start() {
     . "$CONFIG_FILE"
-    screen -dmS sshplus sshpass -p "\$PASS" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -D 8089 -N -p "\$PORT" "\$USER@\$HOST"
+    screen -dmS sshplus sshpass -p "\$PASS" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -D 8089 -N -p "\$PORT" "\$USER@$HOST"
 }
 
 stop() {
-    if screen -list | grep -q "sshplus"; then
-        screen -S sshplus -X quit
+    # Get all screen sessions related to sshplus
+    screens=$(screen -ls | grep "sshplus" | awk '{print $1}')
+    
+    if [ -n "$screens" ]; then
+        # Loop through all sessions and stop them
+        for s in $screens; do
+            screen -S "$s" -X quit
+        done
+        echo -e "${GREEN}All SSHPlus sessions stopped.${NC}"
     else
-        echo -e "${RED}No active SSH proxy session found.${NC}"
+        echo -e "${RED}No active SSHPlus session found.${NC}"
     fi
 }
 EOF
