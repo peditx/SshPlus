@@ -34,17 +34,15 @@ STOP=10
 
 start() {
     . "$CONFIG_FILE"
-    screen -dmS sshplus sshpass -p "\$PASS" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -D 8089 -N -p "\$PORT" "\$USER@$HOST"
+    screen -dmS sshplus sshpass -p "\$PASS" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -D 8089 -N -p "\$PORT" "\$USER@\$HOST"
 }
 
 stop() {
-    # Get all screen sessions related to sshplus
-    screens=$(screen -ls | grep "sshplus" | awk '{print $1}')
-    
-    if [ -n "$screens" ]; then
-        # Loop through all sessions and stop them
-        for s in $screens; do
-            screen -S "$s" -X quit
+    screens=\$(screen -ls | grep "sshplus" | awk '{print \$1}' | sed 's/\\..*//')
+
+    if [ -n "\$screens" ]; then
+        for s in \$screens; do
+            screen -S "\$s" -X quit
         done
         echo -e "${GREEN}All SSHPlus sessions stopped.${NC}"
     else
