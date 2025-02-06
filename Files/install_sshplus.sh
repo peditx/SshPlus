@@ -32,7 +32,12 @@ start() {
 }
 
 stop() {
-    killall sshpass
+    # Check if sshpass is running before trying to kill it
+    if pgrep sshpass > /dev/null; then
+        killall sshpass
+    else
+        echo -e "${RED}No sshpass process running to stop.${NC}"
+    fi
 }
 EOF
 
