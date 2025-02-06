@@ -135,4 +135,4 @@ EOF
 # Set permissions
 chmod +x /usr/bin/sshplus
 
-echo -e "${GREEN}Installation completed. Run 'sshplus' to manage the SSH service.${NC}"
+echo -e "${GREEN}Installation completed. Run 'sshplus' to manage the SSH service. Made by PeDitX https://t.me/peditx${NC}"
