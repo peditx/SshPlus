@@ -10,6 +10,10 @@ opkg update
 opkg remove dropbear
 opkg install openssh-server openssh-client sshpass whiptail bash screen
 
+sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+/etc/init.d/sshd restart
+
 # Prompt for SSH credentials
 HOST=$(whiptail --inputbox "Enter SSH Host:" 8 40 --title "PeDitX OS SshPlus on passwall" 3>&1 1>&2 2>&3)
 USER=$(whiptail --inputbox "Enter SSH Username:" 8 40 --title "PeDitX OS SshPlus on passwall" 3>&1 1>&2 2>&3)
