@@ -20,14 +20,27 @@
 
 ---
 
+
 ## ⚙️ Supported Architectures
-SSHPlus supports all OpenWrt-compatible CPU architectures including:
-- `x86_64`
-- `arm_cortex-a15+neon-vfpv4`
-- `mipsel_24kc`
-- `aarch64_cortex-a53`
-- `mips_24kc`
-- `arm_cortex-a7_neon-vfpv4`
+SSHPlus supports all OpenWrt-compatible CPU architectures, including:
+
+- `x86_64`  
+- `arm_cortex-a15+neon-vfpv4`  
+- `mipsel_24kc`  
+- `aarch64_cortex-a53`  
+- `mips_24kc`  
+- `arm_cortex-a7_neon-vfpv4`  
+- `arm_cortex-a9`  
+- `arm_cortex-a53_neon-vfpv4`  
+- `arm_cortex-a8_neon`  
+- `arm_fa526`  
+- `arm_mpcore`  
+- `arm_xscale`  
+- `powerpc_464fp`  
+- `powerpc_8540`  
+- `mips64_octeonplus`  
+- `mips64_octeon`  
+- `i386_pentium4`  
 
 *Full compatibility list available in [OpenWrt documentation](https://openwrt.org/docs/guide-user/additional-software/package-installation)*
 
