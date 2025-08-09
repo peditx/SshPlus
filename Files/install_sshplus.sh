@@ -52,7 +52,7 @@ module("luci.controller.sshplus", package.seeall)
 function index()
 	if not nixio.fs.access("/etc/init.d/sshplus") then return end
 	-- FIX: Changed menu path to /admin/peditxos/sshplus and set order to 10
-	entry({"admin", "peditxos"}, firstchild(), "PeDitXOS Tools", 50).dependent=true
+	entry({"admin", "peditxos"}, firstchild(), "PeDitXOS Tools", 40).dependent=true
 	entry({"admin", "peditxos", "sshplus"}, cbi("sshplus_manager"), "SSHPlus", 10).dependent = true
 	entry({"admin", "peditxos", "sshplus_api"}, call("api_handler")).leaf = true
 end
