@@ -1,5 +1,5 @@
 # **SSHPlus Manager для OpenWrt**  
-[![Чат в Telegram](https://img.shields.io/badge/Chat%20on-Telegram-blue.svg)](https://t.me/peditx) [![Лицензия: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)  
+[![Чат в Telegram](https://img.shields.io/badge/Chat%20on-Telegram-blue.svg)](https://t.me/peditx) [![Лицензия: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)  
 
 [**English**](README.md) | [**فارسی**](README_fa.md) | [**简体中文**](README-ch.md) | [**Русский**](README_ru.md)  
 
@@ -14,7 +14,7 @@
 - 🌐 Создание SOCKS5-прокси (порт 8089)  
 - 🛡️ Полная интеграция с PassWall/PassWall2  
 - 📊 Мониторинг соединений в реальном времени  
-- 📜 Удобный интерфейс управления через CLI  
+- 📜 Веб-интерфейс LuCI **и** утилита командной строки (`sshplus`)  
 - 🔄 Функция автоматического переподключения  
 - 🧩 Совместимость со всеми архитектурами, поддерживаемыми OpenWrt  
 
@@ -58,14 +58,17 @@ rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/m
 ## ✨ Основные возможности  
 
 1. **Безопасное SSH-туннелирование**  
-   Создание зашифрованных SOCKS5-прокси с военным уровнем шифрования AES-256-GCM  
+   Создание SOCKS5-прокси внутри сеанса OpenSSH. Шифр согласуется OpenSSH с вашим сервером (обычно ChaCha20-Poly1305 или AES-GCM) — SSHPlus не добавляет собственный.  
 
 2. **Интеграция с PassWall**  
    Прямая совместимость с популярными OpenWrt-прокси-решениями  
 
 3. **Управление соединениями**  
+   Через страницу LuCI (**PeDitXOS Tools → SSHPlus**, вкладки **Status** / **Profiles**) или из командной строки:
    ```
-   sshplus  # Запуск интерфейса управления
+   sshplus status   # состояние, профиль, порт, время работы, внешний IP
+   sshplus start    # включить и подключить
+   sshplus test     # сквозная проверка SSH
    ```
    - Запуск/остановка туннелей  
    - Редактирование конфигураций  
@@ -79,7 +82,7 @@ rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/m
 ## 📜 О данном решении  
 **SSHPlus** — это первая нативная реализация:  
 - Полной интеграции OpenSSH в OpenWrt  
-- Управления SSH-туннелями через CLI  
+- Управления SSH-туннелями через веб (LuCI) и командную строку (CLI)  
 - Автоматической настройки PassWall  
 - Сохранения сервиса через init.d  
 
@@ -88,9 +91,12 @@ rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/m
 ---
 
 ## 🔧 Требования  
-- OpenWrt 21.02 или новее  
+- OpenWrt 21.02 или новее — `opkg` до 24.10, `apk` начиная с 25.12  
 - Минимум 8 МБ свободного пространства  
 - Активное интернет-соединение  
+- `curl` — ставится автоматически и **должен оставаться**: проверка соединения в `luci-app-passwall2` вызывает его из Lua и падает с `HTTP 500`, если его нет.
+
+> ⚠️ **Обновляетесь с SSHPlus v15?** Его скрипт удаления выполнял `opkg remove curl` и ломал проверку соединения PassWall2. Запустите установщик v16 — он вернёт `curl` автоматически. Вручную: `apk add curl` (25.12+) или `opkg install curl` (≤ 24.10).
 
 ---
 
@@ -102,7 +108,8 @@ rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/m
 
 ## 📄 Лицензия  
 **© 2025 PeDitX**  
-*Этот проект распространяется по лицензии GPL-3.0.*  
+*Этот проект распространяется по лицензии GNU Affero General Public License v3.0 (AGPL-3.0) — см. [LICENSE](LICENSE).*  
+*Примечание: в старых версиях README указывались MIT и GPL-3.0; файл LICENSE всегда был AGPL-3.0.*  
 
 ---
 

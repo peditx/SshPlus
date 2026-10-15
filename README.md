@@ -1,5 +1,5 @@
 # SSHPlus Manager for OpenWrt
-[![Visitor Badge](https://img.shields.io/badge/Chat%20on-Telegram-blue.svg)](https://t.me/peditx) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Visitor Badge](https://img.shields.io/badge/Chat%20on-Telegram-blue.svg)](https://t.me/peditx) [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
 [**English**](README.md) | [**فارسی**](README_fa.md) | [**简体中文**](README-ch.md) | [**Русский**](README_ru.md)
 
@@ -14,7 +14,7 @@
 - 🌐 SOCKS5 Proxy (Port 8089) creation
 - 🛡️ Full PassWall/PassWall2 integration
 - 📊 Real-time connection monitoring
-- 📜 User-friendly CLI management interface
+- 📜 LuCI web interface **and** a terminal CLI (`sshplus`)
 - 🔄 Auto-reconnect functionality
 - 🧩 Compatible with all OpenWrt-supported architectures
 
@@ -58,14 +58,17 @@ rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/m
 
 ## ✨ Key Capabilities
 1. **Secure SSH Tunneling**  
-   Create encrypted SOCKS5 proxies with military-grade AES-256-GCM encryption
+   Create SOCKS5 proxies carried inside an OpenSSH session. The cipher is the one OpenSSH negotiates with your server (typically ChaCha20-Poly1305 or AES-GCM) — SSHPlus does not pick or add one of its own.
 
 2. **PassWall Integration**  
    Direct integration with popular OpenWrt proxy solutions
 
 3. **Connection Management**  
+   From the LuCI page (**PeDitXOS Tools → SSHPlus** — tabs **Status** / **Profiles**) or from the terminal:
    ```
-   sshplus  # Launch management interface
+   sshplus status   # state, profile, port, uptime, egress IP
+   sshplus start    # enable and connect
+   sshplus test     # end-to-end SSH probe
    ```
    - Start/Stop tunnels
    - Edit configurations
@@ -79,7 +82,7 @@ rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/m
 ## 📜 About This Innovation
 **SSHPlus** represents the first native implementation of:
 - Full OpenSSH integration in OpenWrt
-- CLI-based SSH tunnel management
+- Web (LuCI) and terminal (CLI) SSH tunnel management
 - Automatic PassWall configuration
 - Service persistence through init.d
 
@@ -88,9 +91,15 @@ rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/m
 ---
 
 ## 🔧 Requirements
-- OpenWrt 21.02 or newer
+- OpenWrt 21.02 or newer — `opkg` up to 24.10, `apk` on 25.12 and later
 - 8MB+ free storage
 - Active internet connection
+- `curl` — SSHPlus installs it, and **it must stay installed**: `luci-app-passwall2`'s connectivity check calls `curl` from Lua and dies with `HTTP 500` / `attempt to perform arithmetic on local 'use_time'` when it is missing.
+
+> ⚠️ **Upgrading from SSHPlus v15?** Its uninstaller ran `opkg remove curl`, which
+> broke PassWall2's connectivity check. Run the v16 installer — it restores `curl`
+> automatically (the uninstaller does too). By hand:
+> `apk add curl` (25.12+) or `opkg install curl` (≤ 24.10).
 
 ---
 
@@ -102,7 +111,8 @@ rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/m
 
 ## 📄 License
 **Copyright © 2025 PeDitX**  
-*This project is licensed under the GPL-3.0 License*
+*This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0) — see [LICENSE](LICENSE).*  
+*Note: older revisions of this README said MIT and GPL-3.0; the LICENSE file has always been AGPL-3.0.*
 
 ---
 

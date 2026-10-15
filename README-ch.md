@@ -1,5 +1,5 @@
 # **SSHPlus Manager 适用于 OpenWrt**  
-[![在 Telegram 上聊天](https://img.shields.io/badge/Chat%20on-Telegram-blue.svg)](https://t.me/peditx) [![许可证: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)  
+[![在 Telegram 上聊天](https://img.shields.io/badge/Chat%20on-Telegram-blue.svg)](https://t.me/peditx) [![许可证: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)  
 
 [**English**](README.md) | [**فارسی**](README_fa.md) | [**简体中文**](README-ch.md) | [**Русский**](README_ru.md)  
 
@@ -14,7 +14,7 @@
 - 🌐 创建 SOCKS5 代理（端口 8089）  
 - 🛡️ 完全支持 PassWall/PassWall2  
 - 📊 实时连接监控  
-- 📜 直观的 CLI 管理界面  
+- 📜 LuCI 网页界面**以及**命令行工具（`sshplus`）  
 - 🔄 自动重连功能  
 - 🧩 兼容所有 OpenWrt 支持的架构  
 
@@ -58,14 +58,17 @@ rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/m
 ## ✨ 核心功能  
 
 1. **安全 SSH 隧道**  
-   使用 AES-256-GCM 军用级加密技术创建 SOCKS5 代理  
+   在 OpenSSH 会话中创建 SOCKS5 代理。加密算法由 OpenSSH 与服务器协商决定（通常为 ChaCha20-Poly1305 或 AES-GCM），SSHPlus 本身不会额外指定。  
 
 2. **PassWall 集成**  
    直接兼容 OpenWrt 生态内的流行代理解决方案  
 
 3. **连接管理**  
+   可在 LuCI 页面（**PeDitXOS Tools → SSHPlus**，顶部标签：**Status** / **Profiles**）或命令行中操作：
    ```
-   sshplus  # 启动管理界面
+   sshplus status   # 状态、配置、端口、连接时长、出口 IP
+   sshplus start    # 启用并连接
+   sshplus test     # 端到端 SSH 探测
    ```
    - 启动/停止隧道  
    - 编辑配置  
@@ -79,7 +82,7 @@ rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/m
 ## 📜 关于此项目  
 **SSHPlus** 是首个实现以下功能的原生 OpenWrt 解决方案：  
 - 完整的 OpenSSH 集成  
-- CLI 方式管理 SSH 隧道  
+- 通过网页（LuCI）和命令行（CLI）管理 SSH 隧道  
 - 自动 PassWall 配置  
 - 通过 init.d 进行服务持久化  
 
@@ -88,9 +91,12 @@ rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/m
 ---
 
 ## 🔧 运行要求  
-- OpenWrt 21.02 或更新版本  
+- OpenWrt 21.02 或更新版本 — 24.10 及以下使用 `opkg`，25.12 及以上使用 `apk`  
 - 至少 8MB 的可用存储空间  
 - 可用的互联网连接  
+- `curl` — 安装程序会自动安装，且**必须保留**：`luci-app-passwall2` 的连接检测依赖它，缺失时会返回 `HTTP 500`。
+
+> ⚠️ **从 SSHPlus v15 升级？** 其卸载脚本会执行 `opkg remove curl`，从而破坏 PassWall2 的连接检测。运行 v16 安装程序即可自动恢复 `curl`；也可手动执行：`apk add curl`（25.12+）或 `opkg install curl`（≤ 24.10）。
 
 ---
 
@@ -102,7 +108,8 @@ rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/m
 
 ## 📄 许可证  
 **© 2025 PeDitX**  
-*本项目遵循 GPL-3.0 许可证*  
+*本项目采用 GNU Affero General Public License v3.0（AGPL-3.0）— 详见 [LICENSE](LICENSE)。*  
+*注：本 README 的旧版本曾标注 MIT 与 GPL-3.0；LICENSE 文件始终为 AGPL-3.0。*  
 
 ---
 

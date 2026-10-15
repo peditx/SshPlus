@@ -1,5 +1,5 @@
 # **مدیر SSHPlus برای OpenWrt**  
-[![گفت‌وگو در تلگرام](https://img.shields.io/badge/Chat%20on-Telegram-blue.svg)](https://t.me/peditx) [![مجوز: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)  
+[![گفت‌وگو در تلگرام](https://img.shields.io/badge/Chat%20on-Telegram-blue.svg)](https://t.me/peditx) [![مجوز: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)  
 
 [**English**](README.md) | [**فارسی**](README_fa.md) | [**简体中文**](README-ch.md) | [**Русский**](README_ru.md)  
 
@@ -14,7 +14,7 @@
 - 🌐 ایجاد پروکسی SOCKS5 (پورت 8089)  
 - 🛡️ ادغام کامل با PassWall/PassWall2  
 - 📊 نظارت بر اتصالات در لحظه  
-- 📜 رابط مدیریت کاربرپسند از طریق CLI  
+- 📜 رابط وب LuCI **و** ابزار خط فرمان (`sshplus`)  
 - 🔄 قابلیت اتصال مجدد خودکار  
 - 🧩 سازگار با تمام معماری‌های پشتیبانی‌شده توسط OpenWrt  
 
@@ -58,14 +58,17 @@ rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/m
 ## ✨ قابلیت‌های کلیدی  
 
 1. **تونل‌سازی امن SSH**  
-   ایجاد پروکسی‌های SOCKS5 رمزگذاری‌شده با رمزنگاری سطح نظامی AES-256-GCM  
+   ایجاد پروکسی‌های SOCKS5 داخل یک نشست OpenSSH. الگوریتم رمزنگاری همان است که OpenSSH با سرور مذاکره می‌کند (معمولاً ChaCha20-Poly1305 یا AES-GCM) — SSHPlus رمزنگاری خاصی به آن اضافه نمی‌کند.  
 
 2. **یکپارچگی با PassWall**  
    ادغام مستقیم با راهکارهای پروکسی محبوب OpenWrt  
 
 3. **مدیریت اتصالات**  
+   از صفحه LuCI (**PeDitXOS Tools → SSHPlus**، با تب‌های **Status** و **Profiles**) یا از خط فرمان:
    ```
-   sshplus  # راه‌اندازی رابط مدیریت
+   sshplus status   # وضعیت، پروفایل، پورت، مدت اتصال، IP خروجی
+   sshplus start    # فعال‌سازی و اتصال
+   sshplus test     # آزمون سرتاسری SSH
    ```
    - راه‌اندازی/توقف تونل‌ها  
    - ویرایش تنظیمات  
@@ -79,7 +82,7 @@ rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/m
 ## 📜 درباره این نوآوری  
 **SSHPlus** اولین پیاده‌سازی بومی شامل:  
 - یکپارچگی کامل OpenSSH در OpenWrt  
-- مدیریت تونل‌های SSH از طریق CLI  
+- مدیریت تونل‌های SSH از طریق وب (LuCI) و خط فرمان (CLI)  
 - پیکربندی خودکار PassWall  
 - پایداری سرویس از طریق init.d  
 
@@ -88,9 +91,12 @@ rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/m
 ---
 
 ## 🔧 الزامات  
-- OpenWrt نسخه 21.02 یا جدیدتر  
+- OpenWrt نسخه 21.02 یا جدیدتر — تا 24.10 با `opkg` و از 25.12 به بعد با `apk`  
 - حداقل 8 مگابایت فضای ذخیره‌سازی آزاد  
 - اتصال اینترنت فعال  
+- `curl` — نصب‌کننده آن را نصب می‌کند و **باید باقی بماند**: تست اتصال `luci-app-passwall2` این برنامه را از داخل Lua صدا می‌زند و اگر نباشد با `HTTP 500` و خطای `attempt to perform arithmetic on local 'use_time'` از کار می‌افتد.
+
+> ⚠️ **از SSHPlus v15 ارتقا می‌دهید؟** حذف‌کننده‌ی آن دستور `opkg remove curl` را اجرا می‌کرد و تست اتصال PassWall2 را خراب می‌کرد. نصب‌کننده‌ی v16 را اجرا کنید — `curl` را خودبه‌خود برمی‌گرداند (حذف‌کننده هم همین‌طور). یا دستی: `apk add curl` (25.12+) یا `opkg install curl` (تا 24.10).
 
 ---
 
@@ -102,7 +108,8 @@ rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/m
 
 ## 📄 مجوز  
 **© 2025 PeDitX**  
-*این پروژه تحت مجوز GPL-3.0 منتشر شده است.*  
+*این پروژه تحت مجوز GNU Affero General Public License نسخه ۳.۰ (AGPL-3.0) منتشر شده است — به [LICENSE](LICENSE) مراجعه کنید.*  
+*توجه: نسخه‌های قدیمی‌تر این README مجوزهای MIT و GPL-3.0 را ذکر می‌کردند؛ فایل LICENSE از ابتدا AGPL-3.0 بوده است.*  
 
 ---
 
