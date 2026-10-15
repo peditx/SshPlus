@@ -114,7 +114,7 @@ rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/m
 ---
 
 ## 🙏 特别感谢  
-- 受 [EZpasswall](https://github.com/peditx/EZpasswall) 启发  
+- 受 [PeDitXOS](https://peditxos.ir) 启发  
 - 专为 OpenWrt 社区打造  
 - 由 PeDitX 提供支持  
 

@@ -104,20 +104,20 @@ rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/m
 ---
 
 ## 📬 Support & Contact
-**Telegram Channel:**  
-[https://t.me/peditx](https://t.me/peditx)
+**Website:**  
+[https://peditxos.ir](https://peditxos.ir)
 
 ---
 
 ## 📄 License
-**Copyright © 2025 PeDitX**  
+**Copyright © 2026 PeDitXOS**  
 *This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0) — see [LICENSE](LICENSE).*  
 *Note: older revisions of this README said MIT and GPL-3.0; the LICENSE file has always been AGPL-3.0.*
 
 ---
 
 ## 🙏 Special Thanks
-- Inspired by [EZpasswall](https://github.com/peditx/EZpasswall)
+- Inspired by [PeDitXOS](https://peditxos.ir)
 - Built for the OpenWrt community
 - Powered by PeDitX
 
